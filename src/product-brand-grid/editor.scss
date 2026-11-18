@@ -1,9 +1,6 @@
-/**
- * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
- */
+.product-brand-grid-editor {
 
-.wp-block-meh-product-brand-grid {
-	border: 1px dotted #f00;
+	.product-brand-grid {
+		margin-block: 0;
+	}
 }

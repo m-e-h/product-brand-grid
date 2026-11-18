@@ -2,23 +2,27 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "meh/product-brand-grid",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Product Brand Grid",
 	"category": "widgets",
 	"icon": "grid-view",
 	"description": "Display WooCommerce product brands in a responsive grid.",
-	"example": {},
+	"keywords": [ "woocommerce", "brands", "logos" ],
 	"attributes": {
 		"showTitle": { "type": "boolean", "default": true },
 		"showDescription": { "type": "boolean", "default": true },
 		"showThumbnail": { "type": "boolean", "default": true },
-		"linkToArchive": { "type": "boolean", "default": false }
+		"linkToArchive": { "type": "boolean", "default": false },
+		"columns": { "type": "integer", "default": 3 }
 	},
 	"supports": {
-		"html": false
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true, "padding": true }
 	},
 	"textdomain": "product-brand-grid",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
 }

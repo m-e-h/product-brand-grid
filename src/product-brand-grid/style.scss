@@ -1,12 +1,69 @@
-/**
- * The following styles get applied both on the front of your site
- * and in the editor.
- *
- * Replace them with your own styles or remove the file completely.
- */
+.product-brand-grid.product-brand-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--product-brand-grid-columns, 3), minmax(0, 1fr));
+	gap: 1.5rem;
+	padding: 0;
+	list-style: none;
 
-.wp-block-meh-product-brand-grid {
-	background-color: #21759b;
-	color: #fff;
-	padding: 2px;
+	@for $columns from 1 through 6 {
+		&.has-#{$columns}-columns {
+			--product-brand-grid-columns: #{$columns};
+		}
+	}
+
+	.product-brand-grid-item,
+	.product-brand-grid-identity {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.product-brand-grid-item {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.product-brand-grid-thumbnail img {
+		display: block;
+		width: 100%;
+		height: 8rem;
+		object-fit: contain;
+		object-position: center;
+	}
+
+	.product-brand-grid-title,
+	.product-brand-grid-description > :first-child {
+		margin-block-start: 0;
+	}
+
+	.product-brand-grid-title,
+	.product-brand-grid-description > :last-child {
+		margin-block-end: 0;
+	}
+
+	.product-brand-grid-title {
+		font-weight: 600;
+	}
+
+	a:focus-visible {
+		outline: 2px solid currentcolor;
+		outline-offset: 4px;
+	}
+
+	@media (max-width: 781px) {
+
+		&:is(.has-3-columns, .has-4-columns, .has-5-columns, .has-6-columns) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 480px) {
+
+		&:is(.has-1-columns, .has-2-columns, .has-3-columns, .has-4-columns, .has-5-columns, .has-6-columns) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
 }

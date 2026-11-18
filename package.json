@@ -1,6 +1,6 @@
 {
 	"name": "product-brand-grid",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Display WooCommerce product brands in a responsive grid.",
 	"author": "Marty Helmick",
 	"license": "GPL-2.0-or-later",
@@ -12,14 +12,29 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start --blocks-manifest"
+		"start": "wp-scripts start --blocks-manifest",
+		"test:integration": "wp eval-file tests/integration.php"
 	},
 	"dependencies": {
-		"@wordpress/block-editor": "latest",
-		"@wordpress/blocks": "latest",
-		"@wordpress/i18n": "latest"
+		"@wordpress/block-editor": "^20.1.0",
+		"@wordpress/blocks": "^17.2.0",
+		"@wordpress/components": "^45.0.0",
+		"@wordpress/core-data": "^9.2.0",
+		"@wordpress/element": "^10.2.0",
+		"@wordpress/i18n": "^7.2.0"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^37.2.0"
-	}
+		"@wordpress/scripts": "^37.2.0",
+		"@wordpress/eslint-plugin": "^28.2.0"
+	},
+	"files": [
+		"build",
+		"includes",
+		"src",
+		"product-brand-grid.php",
+		"readme.txt",
+		"README.md",
+		"package.json",
+		"package-lock.json"
+	]
 }
