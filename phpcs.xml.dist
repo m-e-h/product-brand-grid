@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="Product Brand Grid">
+	<file>product-brand-grid.php</file>
+	<file>includes</file>
+	<file>src/product-brand-grid/render.php</file>
+	<arg name="extensions" value="php"/>
+	<arg value="ps"/>
+	<config name="minimum_wp_version" value="6.8"/>
+	<rule ref="WordPress"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array"><element value="product-brand-grid"/></property>
+		</properties>
+	</rule>
+</ruleset>
