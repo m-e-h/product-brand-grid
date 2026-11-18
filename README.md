@@ -44,7 +44,7 @@ direnv exec /absolute/path/to/site/app wp --path=/absolute/path/to/site/app/publ
 
 ## Implementation
 
-The block keeps the scaffold's `meh/product-brand-grid` name and API version 3. Registration uses the WordPress 6.8 metadata collection API; `block.json` defines attributes, styles, editor script, and the PHP renderer. `save()` returns `null`, so no stale term data is stored in post content. No frontend JavaScript is loaded.
+Registration uses the WordPress 6.8 metadata collection API; `block.json` defines attributes, styles, editor script, and the PHP renderer. `save()` returns `null`, so no stale term data is stored in post content. No frontend JavaScript is loaded.
 
 The editor uses `useEntityRecords` from WordPress core data, including automatic pagination for all brands. A read-only `product_brand_grid` field on the existing brand REST endpoint supplies sanitized description and attachment markup. Both the editor and PHP renderer use the same content helper. No new write endpoints, options, tables, scheduled jobs, or order data are introduced. The plugin declares HPOS compatibility because it does not access order storage.
 
