@@ -9,11 +9,11 @@ Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display WooCommerce product brands in a responsive grid with optional titles, descriptions, images, and archive links.
+Display WooCommerce product brands in a responsive grid with optional titles, images, and archive links.
 
 == Description ==
 
-Add Product Brand Grid in the block editor or Site Editor. Choose which brand fields to display, enable archive links, and select one to six columns. The grid adapts to smaller screens and inherits your theme's typography and colors.
+Add Product Brand Grid in the block editor or Site Editor. Choose which brand fields to display, enable archive links, select one to six columns, and adjust the gap between brands. The grid adapts to smaller screens and inherits your theme's typography and colors.
 
 Brand data updates automatically when edited in Products > Brands. Includes brands without products, sorted by name. No frontend JavaScript is required.
 
@@ -30,7 +30,7 @@ The included build files are ready to use. Developers should run npm ci and npm 
 
 == Frequently Asked Questions ==
 
-= Where do I change the logos and descriptions? =
+= Where do I change the logos and titles? =
 
 Edit the brand under Products > Brands. Changes appear without resaving the page containing the grid.
 

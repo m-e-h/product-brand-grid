@@ -28,7 +28,6 @@ $render = static function ( array $attributes = array() ): string {
 $term_ids     = array();
 $attachment_id = 0;
 $query_filter = null;
-$unsafe_filter = null;
 $original_user = get_current_user_id();
 $contains = static function ( string $haystack, string $needle ): bool {
 	return false !== strpos( $haystack, $needle );
@@ -62,10 +61,10 @@ try {
 		$thumbnail = (bool) ( $mask & 4 );
 		$link = (bool) ( $mask & 8 );
 		$html = $render( array( 'showTitle' => $title, 'showDescription' => $description, 'showThumbnail' => $thumbnail, 'linkToArchive' => $link ) );
-		$expected_items = $title ? 2 : ( ( $description || $thumbnail ) ? 1 : 0 );
+		$expected_items = $title ? 2 : ( $thumbnail ? 1 : 0 );
 		$check( substr_count( $html, '<li ' ) === $expected_items, "Visible brands for mask $mask." );
 		$check( substr_count( $html, 'class="product-brand-grid-title"' ) === ( $title ? 2 : 0 ), "Title setting for mask $mask." );
-		$check( substr_count( $html, 'class="product-brand-grid-description"' ) === ( $description ? 1 : 0 ), "Description setting for mask $mask." );
+
 		$check( substr_count( $html, '<img ' ) === ( $thumbnail ? 1 : 0 ), "Thumbnail setting for mask $mask." );
 		$check( substr_count( $html, '<a ' ) === ( $link ? $expected_items : 0 ), "One archive link per visible brand for mask $mask." );
 		if ( 0 === $expected_items ) {
@@ -75,17 +74,23 @@ try {
 	foreach ( array( -5 => 1, 1 => 1, 2 => 2, 6 => 6, 99 => 6 ) as $input => $expected ) {
 		$check( $contains( $render( array( 'columns' => $input ) ), 'has-' . $expected . '-columns' ), 'Columns must be bounded to 1–6.' );
 	}
+	$gap_cases = array(
+		array( '0px', '0px' ),
+		array( '1rem', '1rem' ),
+		array( array( 'top' => 'var:preset|spacing|80', 'left' => 'var:preset|spacing|60' ), 'var(--wp--preset--spacing--80) var(--wp--preset--spacing--60)' ),
+	);
+	foreach ( $gap_cases as list( $gap, $expected ) ) {
+		$html = $render( array( 'style' => array( 'spacing' => array( 'blockGap' => $gap ) ) ) );
+		$list = new WP_HTML_Tag_Processor( $html );
+		$check( $list->next_tag( 'ul' ), 'The brand list should render.' );
+		$css = wp_style_engine_get_stylesheet_from_context( 'block-supports' );
+		preg_match( '/\b(wp-container-[\w-]+)/', $list->get_attribute( 'class' ), $match );
+		$check( isset( $match[1] ) && (bool) preg_match( '/\.' . preg_quote( $match[1], '/' ) . '\s*\{[^}]*\bgap:\s*' . preg_quote( $expected, '/' ) . '[;}]/', $css ), 'The list layout class should apply its saved block gap.' );
+	}
 	$check( $contains( $render(), 'has-3-columns' ), 'Default should be three columns.' );
 	$check( $contains( $render( array( 'align' => 'wide', 'style' => array( 'spacing' => array( 'padding' => array( 'top' => '24px' ) ) ) ) ), 'padding-top:24px' ), 'Native block spacing should reach the wrapper.' );
 	wp_update_term( $term_ids[0], 'product_brand', array( 'name' => 'Grid test updated & escaped' ) );
-	$check( $contains( $render(), 'Grid test updated &amp; escaped' ), 'Current term data must be escaped and rendered without resaving a post.' );
-	$unsafe_filter = static function ( string $description ): string {
-		return $description . '<script>alert("unsafe")</script><img src="x" onerror="alert(1)">';
-	};
-	add_filter( 'term_description', $unsafe_filter );
-	$html = $render();
-	$check( ! $contains( $html, '<script' ) && ! $contains( $html, 'onerror=' ), 'Description HTML must be sanitized.' );
-	remove_filter( 'term_description', $unsafe_filter );
+	$check( $contains( $render( array( 'showTitle' => true ) ), 'Grid test updated &amp; escaped' ), 'Current term data must be escaped and rendered without resaving a post.' );
 
 	wp_set_current_user( 0 );
 	$taxonomy = get_taxonomy( 'product_brand' );
@@ -110,13 +115,10 @@ try {
 	} finally {
 		$GLOBALS['wp_taxonomies']['product_brand'] = $taxonomy;
 	}
-	WP_CLI::success( 'All display combinations, column bounds, dynamic data, escaping, empty states, REST parity and permissions passed.' );
+	WP_CLI::success( 'All display combinations, column bounds and native block spacing, dynamic data, escaping, empty states, REST parity and permissions passed.' );
 } finally {
 	if ( $query_filter ) {
 		remove_filter( 'get_terms_args', $query_filter, 10 );
-	}
-	if ( $unsafe_filter ) {
-		remove_filter( 'term_description', $unsafe_filter );
 	}
 	foreach ( $term_ids as $term_id ) {
 		wp_delete_term( $term_id, 'product_brand' );

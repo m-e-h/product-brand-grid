@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	Disabled,
@@ -25,19 +25,18 @@ const brandQuery = {
 /**
  * Preview brands using the native taxonomy entity store.
  *
- * @param {Object}                       props               Block props.
- * @param {Object}                       props.attributes    Saved block attributes.
- * @param {(attributes: Object) => void} props.setAttributes Update block attributes.
+ * @param {Object}                       props                            Block props.
+ * @param {Object}                       props.attributes                 Saved block attributes.
+ * @param {(attributes: Object) => void} props.setAttributes              Update block attributes.
+ * @param {string}                       props.__unstableLayoutClassNames Core grid layout classes.
  * @return {Element} Block controls and preview.
  */
-export default function Edit( { attributes, setAttributes } ) {
-	const {
-		columns,
-		showTitle,
-		showDescription,
-		showThumbnail,
-		linkToArchive,
-	} = attributes;
+export default function Edit( {
+	attributes,
+	setAttributes,
+	__unstableLayoutClassNames: layoutClasses = '',
+} ) {
+	const { columns, showTitle, showThumbnail, linkToArchive } = attributes;
 	const blockProps = useBlockProps( {
 		className: 'product-brand-grid-editor',
 	} );
@@ -46,11 +45,10 @@ export default function Edit( { attributes, setAttributes } ) {
 		'product_brand',
 		brandQuery
 	);
-	const hasDisplay = showTitle || showDescription || showThumbnail;
+	const hasDisplay = showTitle || showThumbnail;
 	const brands = ( records || [] ).filter(
 		( brand ) =>
 			showTitle ||
-			( showDescription && brand.product_brand_grid?.description ) ||
 			( showThumbnail && brand.product_brand_grid?.thumbnail )
 	);
 
@@ -115,10 +113,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							__( 'Show title', 'product-brand-grid' ),
 						],
 						[
-							'showDescription',
-							__( 'Show description', 'product-brand-grid' ),
-						],
-						[
 							'showThumbnail',
 							__( 'Show thumbnail', 'product-brand-grid' ),
 						],
@@ -155,14 +149,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ /* Explicit list role preserves list semantics in Safari with list-style: none. */ }
 						{ /* eslint-disable-next-line jsx-a11y/no-redundant-roles */ }
 						<ul
-							className={ `product-brand-grid has-${ columns }-columns` }
+							className={ `product-brand-grid has-${ columns }-columns ${ layoutClasses }` }
 							role="list"
 						>
 							{ brands.map( ( brand ) => {
-								const { description, thumbnail } =
-									brand.product_brand_grid || {};
-								const hasIdentity =
-									showTitle || ( showThumbnail && thumbnail );
+								const thumbnail =
+									brand.product_brand_grid?.thumbnail;
 								const Identity =
 									linkToArchive && brand.link ? 'a' : 'div';
 								return (
@@ -170,60 +162,30 @@ export default function Edit( { attributes, setAttributes } ) {
 										key={ brand.id }
 										className="product-brand-grid-item"
 									>
-										{ hasIdentity && (
-											<Identity
-												className="product-brand-grid-identity"
-												href={
-													Identity === 'a'
-														? brand.link
-														: undefined
-												}
-											>
-												{ showThumbnail &&
-													thumbnail && (
-														<RawHTML
-															className="product-brand-grid-thumbnail"
-															aria-hidden={
-																showTitle ||
-																undefined
-															}
-														>
-															{ thumbnail }
-														</RawHTML>
-													) }
-												{ showTitle && (
-													<p className="product-brand-grid-title">
-														{ brand.name }
-													</p>
-												) }
-											</Identity>
-										) }
-										{ showDescription && description && (
-											<RawHTML className="product-brand-grid-description">
-												{ description }
-											</RawHTML>
-										) }
-										{ linkToArchive &&
-											brand.link &&
-											! hasIdentity && (
-												<a
-													className="product-brand-grid-link"
-													href={ brand.link }
-													aria-label={ sprintf(
-														/* translators: %s: Brand name. */
-														__(
-															'View %s products',
-															'product-brand-grid'
-														),
-														brand.name
-													) }
+										<Identity
+											className="product-brand-grid-identity"
+											href={
+												Identity === 'a'
+													? brand.link
+													: undefined
+											}
+										>
+											{ showThumbnail && thumbnail && (
+												<RawHTML
+													className="product-brand-grid-thumbnail"
+													aria-hidden={
+														showTitle || undefined
+													}
 												>
-													{ __(
-														'View brand',
-														'product-brand-grid'
-													) }
-												</a>
+													{ thumbnail }
+												</RawHTML>
 											) }
+											{ showTitle && (
+												<p className="product-brand-grid-title">
+													{ brand.name }
+												</p>
+											) }
+										</Identity>
 									</li>
 								);
 							} ) }

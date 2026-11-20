@@ -2,11 +2,12 @@
 
 A dynamic WordPress block for WooCommerce product brands. Insert **Product Brand Grid** in the block editor or Site Editor, then use its sidebar controls to choose:
 
-- Brand title, description, and thumbnail independently.
+- Brand title and thumbnail independently.
 - Links to brand archives (off by default).
 - One to six columns (three by default).
+- Row and column gaps under **Styles → Dimensions → Block spacing** (1.5rem by default).
 
-Brands are sorted alphabetically and include brands without products. Manage names, descriptions, and images under **Products → Brands**. Changes appear on the storefront without resaving pages. If the title and thumbnail are hidden, linked descriptions get a **View brand** link. Brands with no content for the selected fields are omitted. A completely empty grid produces no storefront markup.
+Brands are sorted alphabetically and include brands without products. Manage names and images under **Products → Brands**. Changes appear on the storefront without resaving pages. Brands with no content for the selected fields are omitted. A completely empty grid produces no storefront markup.
 
 The grid uses at most two columns at viewport widths up to 781px and one column up to 480px. A one-column setting stays one column. Wide/full alignment and native margin/padding controls are supported where the theme supports them. Styling inherits the theme's type and colors.
 
@@ -48,6 +49,6 @@ Registration uses the WordPress 6.8 metadata collection API; `block.json` define
 
 The editor uses `useEntityRecords` from WordPress core data, including automatic pagination for all brands. A read-only `product_brand_grid` field on the existing brand REST endpoint supplies sanitized description and attachment markup. Both the editor and PHP renderer use the same content helper. No new write endpoints, options, tables, scheduled jobs, or order data are introduced. The plugin declares HPOS compatibility because it does not access order storage.
 
-Brand thumbnails use WooCommerce's `thumbnail_id` term metadata and WordPress responsive attachment markup. The renderer batches attachment cache priming, escapes titles/URLs, sanitizes descriptions, and uses `get_block_wrapper_attributes()` for native block supports. Archive links combine the title and thumbnail into one keyboard stop. Image-only links retain an accessible brand name.
+Brand thumbnails use WooCommerce's `thumbnail_id` term metadata and WordPress responsive attachment markup. The renderer batches attachment cache priming, escapes titles/URLs, and uses `get_block_wrapper_attributes()` for native block supports. Archive links combine the title and thumbnail into one keyboard stop. Image-only links retain an accessible brand name.
 
 References: [WordPress block metadata](https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/), [dynamic blocks](https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/creating-dynamic-blocks/), [core data](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-core-data/).
